@@ -1,0 +1,19 @@
+#version 330 core
+
+// Input vertex data, different for all executions of this shader.
+layout(location = 0) in vec3 vertexPosition_modelspace;
+
+/** vec3 - vector of 3 components in GLSL, 3 components in C++ means 3 in GLSL 
+ * layout(location=0) - buffer we used to feed the vertexPosition_modelspace attribute. Each vertex can have numerous attributes : pos, color, texture coord, etc. OpenGL doesn't know what color it is: it just sees vec3, so we need to tell him which buffer corr to which input, we do that by setting the layout to the same value as the 1st para to glVertexAttribPointer.
+ * val "0" isn't important, it can be 12 (but no more than glGetInteger(GL_MAX_VERTEX_ATTRIBS, &v)), it needs to be same # on both sides
+ * vertexPosition_modelspace can be anything else, contains pos of vertex for each run of the vertex shader
+ * "in" - input data
+ */
+void main(){
+    // set vertex position to whatever it was in the buffer
+    gl_Position.xyz = vertexPosition_modelspace;
+    // you must assign a value
+    gl_Position.w = 1.0;
+
+}
+
