@@ -182,14 +182,9 @@ void draw_objects(){
 void idToRGB(int i, int &r, int &g, int &b) {
 	// Convert "i", the integer mesh ID, into an RGB color
 	
-	// DOESN'T WORK 
-	/*r = (i && 0x000000FF) >> 0;
-	 g = (i && 0x0000FF00) >> 8;
-	 b = (i && 0x00FF0000) >> 16;*/
-
-	 r = rand() % 255;
-	 g = rand() % 255;
-	 b = rand() % 255;
+	int r = i & (0x000000FF >> 0);
+	int g = i & (0x0000FF00 >> 8);
+	int b = i & (0x00FF0000 >> 16);
 
 }
 /*void intToFloat(int pickingColorID, ){
