@@ -87,7 +87,7 @@ int main(void)
 			(void*)0            // array buffer offset
 			);
 
-	//	draw_objects();
+		
 
 		// Draw the triangle !
 		for(int i = 0; i < ncpoints; ++i)
@@ -97,6 +97,7 @@ int main(void)
 			//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 			glUniform4f(location, 1.0f, 0.0f, 1.0f, 0.0f);
 		 
+		 	//draw_objects();
 			glDrawArrays(GL_POINTS, 0, 6);
 
 		 }
@@ -202,12 +203,16 @@ void draw_objects(){
 	// reassign value to point color 
 	// randomize the point color object
 	// change point_color 
-	glColor3fv(point_color);
+	//glColor3fv(point_color);
 	glBegin(GL_POINTS);
+	
 	for (int i = 0; i < ncpoints; i++){
+		glColor3fv(cpointsColor[i]);
 		glVertex3fv(cpoints[i]);
 	}
 	glEnd();
+
+
 }
 
 void idToRGB(int i, int &r, int &g, int &b) {
