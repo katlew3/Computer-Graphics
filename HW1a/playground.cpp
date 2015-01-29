@@ -5,16 +5,19 @@
 GLFWwindow* window;
 #include <glm/glm.hpp>	// Include GLM
 using namespace glm;
+#include <iostream>
+using namespace std;
 #include <common/shader.hpp>
 #include <vector>		// display points
+#include <time.h>
 
 // CONSTANTS
 const int ncpoints = 6;
 const float point_color[] = { 0.0f, 1.0f, 1.0f };
 
 // RUNTIME VARIABLES
-float cpoints[ncpoints][3];
-float cpointsColor[ncpoints][3];
+float cpoints[ncpoints][3];				// colored points [# of points][x, y, z]
+float cpointsColor[ncpoints][3];		// colored points array [# of points] [r, g, b]
 
 // start of functions
 int initializeGLFW();
@@ -28,6 +31,7 @@ void idToRGB(int i, int &r, int &g, int &b);
 
 int main(void)
 {
+	srand(time(NULL));
 	initializeGLFW();
 	openWindow();
 	initializeGLEW();
@@ -35,7 +39,7 @@ int main(void)
 	// Ensure we can capture the escape key being pressed below
 	glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
 
-	// set black background
+	// set grey background
 	glClearColor(0.3f, 0.3f, 0.3f, 0.3f);
 
 	// Create vertex array object
@@ -46,6 +50,9 @@ int main(void)
 
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders("SimpleVertexShader.vertexshader", "SimpleFragmentShader.fragmentshader");
+
+	//	 most likely causing error
+	GLuint location = glGetUniformLocation(programID, "color");
 
 	initialize();
 	static const GLfloat g_vertex_buffer_data[] = {
@@ -59,6 +66,7 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(cpoints), cpoints, GL_STATIC_DRAW);
 
+	/* Start of infinite loop */
 	do{
 
 		// Clear the screen
@@ -79,12 +87,21 @@ int main(void)
 			(void*)0            // array buffer offset
 			);
 
-		draw_objects();
+	//	draw_objects();
 
 		// Draw the triangle !
-		// glDrawArrays(GL_TRIANGLES, 0, 3); // 3 indices starting at 0 -> 1 triangle
+		for(int i = 0; i < ncpoints; ++i)
+		{
+			//glUniform4f(location, cpointsColor[ncpoints][0] / 255.0f, cpointsColor[ncpoints][1] / 255.0f, cpointsColor[ncpoints][0] / 255.0f, 1.0f);
+		 
+			//glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+			glUniform4f(location, 1.0f, 0.0f, 1.0f, 0.0f);
+		 
+			glDrawArrays(GL_POINTS, 0, 6);
 
-		glDrawArrays(GL_POINTS, 0, 6);
+		 }
+	
+		//glDrawArrays(GL_POINTS, 0, 6);
 		glEnable(GL_PROGRAM_POINT_SIZE);
 
 		glDisableVertexAttribArray(0);
@@ -97,6 +114,8 @@ int main(void)
 	while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
 	glfwWindowShouldClose(window) == 0);
 
+	/* End of infinite loop */
+
 	// Cleanup VBO
 	glDeleteBuffers(1, &vertexbuffer);
 	glDeleteVertexArrays(1, &VertexArrayID);
@@ -107,7 +126,9 @@ int main(void)
 
 	return 0;
 }
+// END OF MAIN
 
+/* Start of all functions */
 int initializeGLFW() {
 	// Initialise GLFW
 	if (!glfwInit())
@@ -162,8 +183,18 @@ void initialize(){
 		cpointsColor[i][0] = red;
 		cpointsColor[i][1] = green;
 		cpointsColor[i][2] = blue;
-	}
-
+ 	}
+	/*
+		for(int i = 0; i < ncpoints; ++i)
+		{
+			for(int j = 0; j < 3; ++j)
+			{
+				cout << cpointsColor[i][j];
+			}
+			cout << "---" << endl;
+		}
+		cout << "Done printing" << endl;
+		*/
 
 }
 
@@ -181,10 +212,9 @@ void draw_objects(){
 
 void idToRGB(int i, int &r, int &g, int &b) {
 	// Convert "i", the integer mesh ID, into an RGB color
-	
-	int r = i & (0x000000FF >> 0);
-	int g = i & (0x0000FF00 >> 8);
-	int b = i & (0x00FF0000 >> 16);
+	r = i & (0x000000FF >> 0);
+	g = i & (0x0000FF00 >> 8);
+	b = i & (0x00FF0000 >> 16);	 
 
 }
 /*void intToFloat(int pickingColorID, ){
