@@ -71,3 +71,78 @@ void renderScene(void) {
 		glDrawElements(GL_TRIANGLES, penSize * 4, GL_UNSIGNED_SHORT, (void*)0);
 	}
 }
+
+void initOpenGL(void) {
+	// Projection matrix : 45° Field of View, 4:3 ratio, display range : 0.1 unit <-> 100 units
+	gProjectionMatrix = perspective(45.0f, 4.0f / 3.0f, 0.1f, 100.0f);
+
+	// Camera matrix
+	gViewMatrix = lookAt(vec3(10.0, 10.0, 10.0f),	// eye
+		vec3(0.0, 0.0, 0.0),	// center
+		vec3(0.0, 1.0, 0.0));	// up
+	
+	// Create and compile our GLSL program from the shaders
+	programID = LoadShaders("StandardShading.vertexshader", "StandardShading.fragmentshader");
+	pickingProgramID = LoadShaders("Picking.vertexshader", "Picking.fragmentshader");
+
+	// Get a handle for our "MVP" uniform
+	MatrixID = glGetUniformLocation(programID, "MVP");
+	ModelMatrixID = glGetUniformLocation(programID, "M");
+	ViewMatrixID = glGetUniformLocation(programID, "V");
+	ProjMatrixID = glGetUniformLocation(programID, "P");
+
+	// Get a handle for our "LightPosition" uniform
+	LightID = glGetUniformLocation(programID, "LightPosition_worldspace");
+
+	selectedColorID = glGetUniformLocation(programID, "selectedColor");
+
+	createObjects();
+}
+
+void createVAOs(Vertex Vertices[], unsigned short Indices[], int ObjectId) {
+	// Create Vertex Array Object
+	glGenVertexArrays(1, &VertexArrayId[ObjectId]);
+	glBindVertexArray(VertexArrayId[ObjectId]);
+	
+	// Create Buffer for vertex data
+	glGenBuffers(1, &VertexBufferId[ObjectId]);
+	glBindBuffer(GL_ARRAY_BUFFER, VertexBufferId[ObjectId]);
+	glBufferData(GL_ARRAY_BUFFER, VertexBufferSize[ObjectId], Vertices, GL_STATIC_DRAW);
+
+	// Create Buffer for indices
+	if (Indices != NULL) {
+		glGenBuffers(1, &IndexBufferId[ObjectId]);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBufferId[ObjectId]);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, IndexBufferSize[ObjectId], Indices, GL_STATIC_DRAW);
+	}
+
+	// Assign vertex attributes
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, VertexSize, 0);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, VertexSize, (GLvoid*)RgbOffset);
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, VertexSize, (GLvoid*)Normaloffset);
+
+	glEnableVertexAttribArray(0);	// position
+	glEnableVertexAttribArray(1);	// color
+	glEnableVertexAttribArray(2);	// normal
+}
+
+/* ---------------Camera Action -----------------*/
+void moveUp(int lastPressedKey) {
+	switch (lastPressedKey) {
+		case GLFW_KEY_C :
+			moveHorizontal = false;
+			/* go in reverse direction */
+			cameraVerticleAngle -= 5.0f;
+			updateView(moveHorizontal, viewX, viewY, viewZ);
+			/* update the eye, center is always 0, up is always +y */
+			eye = vec3(viewX, viewY, viewZ);
+			gViewMatrix = lookAt(eye, center, up);
+			break;
+
+		case GLFW_KEY_1:
+			haptic[0].translate -= vec3(0.0f, 0.0f, 0.25f);
+			break;
+
+	}
+
+}
