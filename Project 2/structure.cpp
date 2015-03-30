@@ -141,8 +141,25 @@ void moveUp(int lastPressedKey) {
 
 		case GLFW_KEY_1:
 			haptic[0].translate -= vec3(0.0f, 0.0f, 0.25f);
-			break;
-
 	}
+}
 
+int main(void) {
+	do{
+		if (GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_UP))
+				moveUp(lastPressedKey);
+		}
+		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+			if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+				if (lastPressedKey == GLFW_KEY_5) {
+					haptic[5].rotate -= vec3(0.0f, 5.0f, 0.0f);
+				}
+			}
+		}
+		// DRAWING POINTS
+		renderScene();
+
+	} while (glfwGetKey(window, GLFW_KEY_ESCAPE) != GLFW_PRESS &&
+	glfwWindowShouldClose(window) == 0);
 }
