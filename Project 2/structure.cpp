@@ -233,3 +233,42 @@ void main(){
 		MaterialSpecularColor * LightColor2 * LightPower2 * pow(cosAlpha2,5) / (distance2*distance2))
 		;	
 }
+
+/* StandardShading.vertexshader */
+// Input vertex data, different for all executions of this shader.
+layout(location = 0) in vec4 vertexPosition_modelspace;
+layout(location = 1) in vec4 vertexColor;
+
+// Output data ; will be interpolated for each fragment.
+out vec4 vs_vertexColor;
+out vec3 Position_worldspace, Normal_cameraspace, EyeDirection_cameraspace, LightDirection_cameraspace;
+
+// Values that stay constant for the whole mesh.
+uniform mat4 M, V, P;
+uniform vec3 LightPosition_worldspace, LightPosition_worldspace2, selectedColor;
+
+void main(){
+	gl_PointSize = 5.0;
+	// Output position of the vertex, in clip space : MVP * position
+	gl_Position =  P * V * M * vertexPosition_modelspace;
+	
+	// Position of the vertex, in worldspace : M * position
+	Position_worldspace = (M * vertexPosition_modelspace).xyz;
+	
+	// Vector that goes from the vertex to the camera, in camera space.
+	// In camera space, the camera is at the origin (0,0,0).
+	vec3 vertexPosition_cameraspace = ( V * M * vertexPosition_modelspace).xyz;
+	EyeDirection_cameraspace = vec3(0,0,0) - vertexPosition_cameraspace;
+
+	/* Kat modified V to M because it was doing it relative to the camera */
+	// Vector that goes from the vertex to the light, in camera space. M is ommited because it's identity.
+	vec3 LightPosition_cameraspace = ( M * vec4(LightPosition_worldspace,1)).xyz;
+
+	LightDirection_cameraspace = LightPosition_cameraspace + EyeDirection_cameraspace;
+
+	// Normal of the the vertex, in camera space
+	Normal_cameraspace = ( V * M * vec4(1.0)).xyz; // Only correct if ModelMatrix does not scale the model ! Use its inverse transpose if not.
+	
+	// UV of the vertex. No special space for this one.
+	vs_vertexColor = vertexColor;
+}
