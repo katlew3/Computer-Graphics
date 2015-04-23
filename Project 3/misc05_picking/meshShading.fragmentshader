@@ -1,0 +1,41 @@
+#version 330 core
+
+// Interpolated values from the vertex shaders
+in vec4 vs_vertexColor;
+in vec3 Position_worldspace;
+in vec3 Normal_cameraspace;
+in vec3 EyeDirection_cameraspace;
+in vec3 LightDirection_cameraspace;
+
+in vec2 UV;
+
+// Ouput data
+out vec3 color;
+
+// Values that stay constant for the whole mesh.
+uniform mat4 MV;
+uniform vec3 LightPosition_worldspace;
+
+uniform vec3 selected_color;
+uniform sampler2D myTextureSampler;
+
+void main(){
+
+	vec3 LightColor = vec3(1.0,1.0,1.0);
+	float LightPower = 100.0f;
+	vec3 MaterialDiffuseColor;
+	vec3 MaterialSpecularColor;
+	vec3 MaterialAmbientColor;
+	MaterialDiffuseColor = vs_vertexColor.rgb * vec3(1.0,1.0,1.0);
+	MaterialSpecularColor = MaterialDiffuseColor * vec3(0.1,0.1,0.1);
+	MaterialAmbientColor = vs_vertexColor.rgb * vec3(0.2,0.2,0.2);
+	float distance = length( LightPosition_worldspace - Position_worldspace );
+	vec3 n = normalize( Normal_cameraspace );
+	vec3 l = normalize( LightDirection_cameraspace );
+	float cosTheta = clamp( dot( n,l ), 0,1 );
+	vec3 E = normalize(EyeDirection_cameraspace);
+	vec3 R = reflect(-l,n);
+	float cosAlpha = clamp( dot( E,R ), 0,1 );
+	color = texture( myTextureSampler, UV ).rgb;
+
+}
