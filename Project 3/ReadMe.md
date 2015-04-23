@@ -7,7 +7,7 @@
 ![](http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw3/fit_21.png)
 
 
-* Use ? and ? keys move the camera along the blue circle parallel to the equator. ? and ? keys rotate the camera along the red circle orthogonal to the equator. Point the camera always to the origin. Choose a good "up" direction.
+* Use up and down keys move the camera along the blue circle parallel to the equator. left and right keys rotate the camera along the red circle orthogonal to the equator. Point the camera always to the origin. Choose a good "up" direction.
 * Key 'r' resets the program to its startup state. (displays control points on x-y plane, clears any rotations, etc.)
 * Key 'f' shows triangle mesh of your face from blender
 * Key 'c' shows triangle control mesh points
