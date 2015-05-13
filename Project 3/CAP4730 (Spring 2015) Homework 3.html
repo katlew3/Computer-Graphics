@@ -1,0 +1,200 @@
+
+<!-- saved from url=(0063)http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw3/hw3.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>CAP4730 (Spring 2015) Homework 3 </title>
+		<style>
+
+			body { margin-left: 5em;
+				margin-right: 10em;
+				margin-top: 5em;
+    color: #101010;
+    background-color: #EEEEEE;
+			}
+			span.key { color: red; }
+			label { font-weight: bold; }
+			img.side { float: right; margin: 1em 2em; width: 300px; }
+			img.inline-formula { height: 1.2em }
+			img.formula { text-align: center; margin: .5em auto ; max-height: 40px ; display: block }
+			h3 { clear: both; } 
+			p { margin: .5em 2em; }
+			h4 { color: #222; margin-left: 1em; }
+			div.points { 
+				color: green; 
+				margin-left: 2em; margin-top: -1em; margin-bottom: 1em;
+			}
+			address { color: red; font-weight: bold; }
+		</style>
+	</head>
+	<body>
+	<h3> Due: Apr 23 11:55pm </h3>
+	<h1> Homework 3 </h1>
+	<div class="points">Points: 95 (+45 BONUS)</div>
+
+	<h3> Resources </h3>
+	<ul>
+	  <li>codebase - <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw2/hw2_sp15_codebase.zip">hw2_codebase</a></li>
+	  <li>  <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw3/hw3_helper.zip">helper code</a> - TGA loading and triangle intersection.</li>
+	  <li>  <a href="https://drive.google.com/open?id=0B5Z4BoQJYeqLfkR5TnV5WTl6Y0FyNEYyMFk2X3ktUHRCZW8wdVFIRUhyUzJSNmxmOTFqcWM&authuser=0">Face Scan Database</a> - Select your model and texture files. TIP: You can load the models in Meshlab to see the 3D scan with texture</li>
+	  <li>  <a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-5-a-textured-cube/">Texturing tutorial</a> - Useful to read through
+	  </li><li>  Recommended Tools: <ul>
+		<li><a href="http://www.cs.princeton.edu/~min/meshconv/">meshconv</a> - A very handy utility for converting model files. Alternatively, use Meshlab or Blender</li>
+		<li>  <a href="http://www.gimp.org/">GIMP</a>: Image editor, converts between various image formats. Utility for converting model files. Runs in cmd. Alternatively, use Meshlab or Blender</li>
+		<li>  <a href="http://www.blender.org/">Blender</a>, <a href="http://meshlab.sourceforge.net/">MeshLab</a>: 3D modelers/viewers/editors</li>
+	  </ul> </li>
+	  
+	</ul>
+      
+	<h3> Set up </h3>
+	<div class="points">Points: 10</div>
+	<img class="side" src="./CAP4730 (Spring 2015) Homework 3_files/camera.png">
+	<img class="side" src="./CAP4730 (Spring 2015) Homework 3_files/dia01.png">
+	<ul>
+		<li>
+			Draw a 600x600 window and set the title to "Yourname(gatorlink ID)".
+		</li>
+		<li>
+		  Use <strong>Perspective</strong> projection, set the
+		  field of view angle to be 45 degree, near plane to be
+		  0.1 and far plane to be 100.
+		</li>
+		<li>
+			<strong>Camera movements from Homework 2</strong>: 
+			Use
+			<span class="key"><b>←</b></span> and <span class="key"><b>→</b></span> keys 
+			move the camera along the blue circle parallel to the equator.
+			<span class="key"><b>↑</b></span> and <span class="key"><b>↓</b></span> keys 
+			rotate the camera along the red circle orthogonal to the equator.
+			Point the camera always to the origin. Choose a good "up" direction.
+		</li>
+		<li>
+			Key 'r' resets the program to its startup state. (displays control points on x-y plane, clears any rotations, etc.)
+		</li>
+	</ul>
+
+	<h3> Task 1: Display the face model</h3>
+	<img class="side" src="./CAP4730 (Spring 2015) Homework 3_files/head.png">
+	<div class="points">Points: 15</div>
+		<p>
+			Draw the triangle mesh of your face on the screen. You need
+			to read the model from the obj file into your program.
+			<br>
+				User should be able to show/hide the triangle mesh using the key <span class="key">f</span>.
+		</p>
+		<p><i>ATTENTION</i>: You need to figure out whether to use the <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw2/objloader.zip">modified source</a> files you were given in hw2, use the original ones, or modify the obj loader further to fit your purposes.
+		</p><p>Details about the obj file format can be found <a href="http://en.wikipedia.org/wiki/Wavefront_.obj_file">here</a> to further help you understand how it should work.</p>
+
+	<h3> Task 2: Draw the control mesh</h3>
+	<img class="side" src="./CAP4730 (Spring 2015) Homework 3_files/tex_grid.png">
+	<img class="side" src="./CAP4730 (Spring 2015) Homework 3_files/grid.png">
+	<div class="points">Points: 20+20</div>
+		<ul>
+			<li>
+			Create a point array (quad mesh), at least 12 by 12, show the vertices and wireframe on the screen. 
+			The points should be evenly-spaced an xy grid.
+				<br>
+				The user should be able to show/hide the control points mesh using the key <span class="key">c</span>.
+			</li>
+			<br>
+			<li>
+				Map the photo of the scan.
+				<br><br>
+				The photo is provided in TGA format. You can use
+				the <code>load_texture_TGA</code>
+				function to load it as an OpenGL texture. 
+				<code>load_texture_TGA</code>
+				is defined in tga.c and tga.h from the helper
+				package. See tga.h for further details.
+			</li>
+		</ul>
+
+	<h3> Task 3: Fit the points to your face</h3>
+
+	<div class="points">Points: 15</div>
+
+	Change the shape of the control mesh to fit your model. Choose
+	one of the following two options.
+
+	<ul>
+	  <div style=" height:400px;">
+	  <img class="side" src="./CAP4730 (Spring 2015) Homework 3_files/fit1.png">
+	<li><i>Option 1: Model by hand </i></li>
+	
+		<p>
+		  Allow the user to adjust the surface.  Support
+		  picking-and-draging of any control point with the left
+		  button of the mouse. If the SHIFT key is pressed,
+		  picking-and-draging moves the point in the z-direction; if
+		  it is not pressed, in the x-y plane.
+		</p>
+		<p>
+		  Manually adjust the control points to best fit the scanned triangulation.
+		</p>
+	  </div>
+
+	<div>
+
+	<li> <i>Option 2: Automate fitting via ray casting </i></li> 
+	<img class="side" src="./CAP4730 (Spring 2015) Homework 3_files/fit_22.png">
+	<img class="side" src="./CAP4730 (Spring 2015) Homework 3_files/fit_21.png">
+	<p> Adjust the size and position of the control mesh so that
+	  your face on the texture is roughly placed at the correct
+	  position with respect to your head model. </p>
+
+   <p> For each point on the plane, shoot a ray from the front
+	 of the point along the Z direction. Find the first
+	 intersection point with the model, and then move the
+	 point to that intersection position. If the ray doesn't
+	 intersect with the model, keep the point on the xy
+	 plane.
+   </p><p>
+   </p><p>
+	The ray-triangle intersection function is provided in the
+	file ray_casting.h in the helper package.
+	</p>
+	</div>
+	</ul>
+	
+	
+	<h3> Task 4: Save/Load control points </h3>
+	<div class="points">Points: 15</div>
+		<p>
+		By pressing keys <span class="key">s</span> and <span class="key">l</span> one should be able to export (<strong>save</strong>) the current
+		control points into file <strong>"cm.hw3"</strong> and respectively
+		<strong>load </strong> a .hw3 file and display the surface. Save and include the control points in your submission so the TA can see your finished scene by pressing
+		'l'. You can use any file format (ascii or binary) you want for storing the data as long as you maintain the described functionality.
+		</p>
+
+	<h3> <i>BONUS: Render a smooth surface</i></h3>
+	<div class="points">Points: 15</div>
+		<ul>
+			<li>
+				Instead of rendering a mesh, use the points as the control mesh and render a NURBS surface.
+			</li>
+			<li>
+				Select a proper uv mapping so that the texture is mapped correctly on the surface.
+			</li>
+		</ul>
+		
+	<h3> <i>EXTRA BONUS: Implement any 2 of</i></h3>
+	<div class="points">Points: 15 + 15</div>
+		<ul>
+			<li>Shadow mapping</li>
+			<li>Displacement mapping</li>
+			<li>Hair</li>
+			<li>Trim out and place eye balls</li>
+			<li>Animate your face: smile/frown/etc</li>
+		</ul>
+        
+
+	<h3> WHAT TO SUBMIT </h3>
+	<ul>
+		<li> A .ZIP ARCHIVE CONTAINING:
+		<ul><li> All of your <strong>source</strong>, <strong>model/texture</strong>, and <strong>.hw3</strong> files (.cpp's, shaders, .obj's, .tga's, etc) as in <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw3/hw1b_sp15_codebase.zip">link</a></li>
+			<li> <strong>Screenshots</strong> of your running program: one per task. </li>
+		</ul></li>
+		<i>NOTE: Make sure your programs compile and run on the lab machines in E313 as the grading would be done on them.</i>
+	</ul>
+	
+
+
+</body></html>

@@ -1,0 +1,88 @@
+
+<!-- saved from url=(0064)http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw1/hw1a.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>CAP4730 (Spring 2015) Homework 1A</title>
+		<style>
+			body { margin-left: 5em;
+				margin-right: 10em;
+				margin-top: 5em;
+    color: #101010;
+    background-color: #EEEEEE;
+			}
+			label { font-weight: bold; }
+			img { float: left; margin: 1em 2em; width: 300px; }
+			h3 { clear: both; } 
+			p { margin: 1em 2em; }
+			div.points { 
+				color: green; 
+				margin-left: 2em; margin-top: -1em; margin-bottom: 1em;
+			}
+
+			
+		</style>
+	</head>
+	<body>
+		<h3> Due: Feb 01 11:59pm </h3>
+		<h1>Homework 1 Part A</h1> 
+		<div class="points">Points: 15</div>
+		<h3>Purpose</h3>
+		<p>This project teaches: moving objects via the mouse in OpenGL
+		</p>
+		<h3>Set up</h3>
+		<p> Using <a href="http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-an-opengl-hack/">Tutorial: Picking with an OpenGL hack</a> as the codebase do the following tasks:
+			<br> YOU CAN USE THE FOLLOWING CODE TO GET STARTED: <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw1/hw1a_sp15_codebase.zip">link</a> <!--, <a href=misc05_picking.zip>link (ver0)</a>-->
+		</p>
+		<h3>Remarks</h3>
+		<ul>
+			<li>Keep in mind that the OpenGL window's origin (0,0) is on the bottom-left, whereas mouse reports with (0,0) on top-left</li>
+			<li>In order to get the mouse-to-world coordinate mapping you can:
+			<ul>
+				<li>METHOD 1
+				<ul>
+					<li> Switch to orthogonal projection: glm::mat4 ProjectionMatrix = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 0.0f, 100.0f);</li>
+					<li> After you have gotten your CursorPos use the glm::unProject(glm::vec3(x, y, 0.0), ModelMatrix, ProjectionMatrix, Viewport); function to get your world coordinates </li>
+				</ul>
+				</li>
+				<li>METHOD 2
+				<ul>
+					<li> Get the corresponding mouse coordinates for our vertices 0, 1, 2 by clicking on them and recording their mouse positions - glfwGetCursorPos(window, &amp;xpos, &amp;ypos);</li>
+					<li>Since you know the exact positions of vertices you can then figure out the mapping.</li>
+				</ul>
+				e.g. Consider a vertex with world coordinates (1,1). Clicking on it and extracting its corresponding xpos and ypos would give you the mapping (1,1) -&gt; (xpos,ypos).<br>
+					After extracting the mapping for the other 2 vertices you would be able to construct your reference frame.<br>
+					This needs to be done once and the mapping can be hardcoded.<br>
+				</li>
+			</ul>
+			</li>
+		</ul>
+		<h3>Task 0: Change the name of the window</h3>
+		<p>
+		Change the title of the window to your name and your GatorLink ID, e.g. "Firstname Lastname (ufid)"
+		</p>
+		<h3>Task 1: Create Scene</h3>
+		<p> 
+		Display a few (5-6) differently colored points on the screen.
+		</p>
+		<h3>Task 2: Picking</h3>
+		<p>
+		Change the color of points upon a mouse click, restore original color upon release.
+		</p>
+		<h3>Task 3: Dragging</h3>
+		<p> Implement the ability to move the points with the mouse
+		</p>
+		<img src="./CAP4730 (Spring 2015) Homework 1A_files/scr01.png"> 
+		<img src="./CAP4730 (Spring 2015) Homework 1A_files/scr03.png"> 		
+		<h3>WHAT TO SUBMIT</h3>
+		<ul>
+				<li> <strike>Everything needed to compile and run your program (src + makefiles, visual studio project, etc) </strike></li>
+				<li> All of your source files (.cpp's, shaders, etc) as in <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw1/hw1a_sp15_codebase.zip">link</a></li>
+				<li> A screenshot of your running program </li>
+				<i>NOTE: Make sure your programs compile and run on the lab machines in E313 as the grading would be done on them.</i>
+		</ul>
+		<p> 
+		</p>
+		
+		
+	
+
+</body></html>

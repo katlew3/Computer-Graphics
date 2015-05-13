@@ -1,0 +1,204 @@
+
+<!-- saved from url=(0063)http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw2/hw2.html -->
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>CAP4730 (Spring 2015) Homework 2</title>
+		<style>
+
+			body { margin-left: 5em;
+				margin-right: 10em;
+				margin-top: 5em;
+    color: #101010;
+    background-color: #EEEEEE;
+			}
+			span.key { color: red; }
+			label { font-weight: bold; }
+			img.side { float: right; margin: 1em 2em; width: 300px; }
+			img.inline-formula { height: 1.2em }
+			img.formula { text-align: center; margin: .5em auto ; max-height: 40px ; display: block }
+			h3 { clear: both; } 
+			p { margin: .5em 2em; }
+			h4 { color: #222; margin-left: 1em; }
+			div.points { 
+				color: green; 
+				margin-left: 2em; margin-top: -1em; margin-bottom: 1em;
+			}
+			address { color: red; font-weight: bold; }
+		</style>
+	</head>
+	<body>
+		<h3> Due: Mar 25 11:55pm </h3>
+		<h1>Homework 2</h1> 
+		<div class="points">Points: 80 (+10 BONUS)</div>
+
+		<h3> Purpose </h3>
+		<p>
+			To learn how to use affine transformations to position
+			objects in 3-space.
+		</p>
+
+		<h3>Resources</h3>
+		<ul>
+			<li>
+				<a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-3-matrices/">OpenGL Transformations and Matrices</a> - Moving/scaling/rotating objects
+			</li>
+			<li>
+				<a href="http://www.opengl-tutorial.org/beginners-tutorials/tutorial-8-basic-shading/">OpenGL Shading</a> - Lighting up the scene
+			</li>
+			<li>
+				<a href="http://www.glfw.org/docs/latest/group__input.html">GLFW Input Handling</a> - adding keyboard inputs
+			</li>
+			<li>
+				<a href="http://glm.g-truc.net/0.9.6/index.html">GLM</a> - Convenient OpenGL Mathematics library
+			</li>
+			<li>
+				<a href="https://www.opengl.org/wiki/Data_Type_%28GLSL%29">GLSL Data Types</a> - Useful to know for shader programming
+			</li>
+		</ul>
+
+
+		<h3>Set Up</h3>
+		<p>
+		</p><ul>
+		<li>Use the following <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw2/hw2_sp15_codebase.zip">code</a>.</li>
+		<li>Download the <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw2/models.zip">model files</a> needed for constructing the haptic device</li>
+		<li>In order to be able to load them, place these <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw2/objloader.zip">modified source files</a> into <strong>&lt;tutorials_root&gt;/common/</strong>. Make sure you backup the original files.
+			<br><i>Note: You will need to rebuild your project in order to update the intermediate object files, thus avoiding linking errors.</i></li>
+		</ul>
+		<p></p>
+
+		<h3> Task 1: Grid </h3>
+		<div class="points">Points: 5</div>
+		<a href="./CAP4730 (Spring 2015) Homework 2_files/grid1.png"> <img class="side" src="./CAP4730 (Spring 2015) Homework 2_files/grid1.png"> </a>
+		<p>
+		Draw a grid on the X-Z plane that covers the rectangle area of (-5,0,-5) to (+5,0,+5) with grid squares of size 1.0x1.0.
+		<br>
+		Draw the positive X axis in red, the Y axis in green and the Z axis in blue. Only draw the positive portion of the axis. Each axis should be of length 5.(or 10 grid blocks).
+		</p>
+
+		<h3> Task 2: Camera Rotations </h3>
+		<div class="points">Points: 5</div>
+		<img class="inline" src="./CAP4730 (Spring 2015) Homework 2_files/diagram.png">
+		<img class="inline" src="./CAP4730 (Spring 2015) Homework 2_files/dia01.png">
+			<p>
+			Use <strong>Perspective</strong> projection and locate your camera
+			so you can see the whole scene in your view. Use glm::LookAt function to generate the View matrix.
+			</p>
+			<p>
+			Select the camera using key <span class="key">C</span>. 
+            <span class="key"><b>←</b></span> and <span class="key"><b>→</b></span> keys 
+            move the camera along the blue circle parallel to the equator.
+            <span class="key"><b>↑</b></span> and <span class="key"><b>↓</b></span> keys 
+            rotate the camera along the red circle orthogonal to the equator.
+            The camera always points to the origin. What direction will you choose as the "up" direction?
+			</p>
+
+		<h3> Task 3: Draw the haptic device </h3>
+		<div class="points">Points: 25</div>
+		<img class="inline" src="./CAP4730 (Spring 2015) Homework 2_files/phantom.jpg">
+		<a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw2/haptic1.png"> <img class="inline" src="./CAP4730 (Spring 2015) Homework 2_files/haptic1_small.png"> </a>
+			<p>
+			The haptic device consists of the following parts:
+			</p><ul>
+				<li> <strong>Base</strong>: placed on the x-z-plane</li>
+				<li> <strong>Top </strong>: placed on top of the 
+				<i>base</i>, slightly penetrating the base.</li>
+				<li> <strong>First Arm</strong>: a rectangular box coming
+				out of the <i>top</i>, it should be aligned with the center of
+				the <i>top</i> sphere.</li>
+				<li> <strong>Joint</strong> A cylinder of appropriate radius, centered
+				at the other end of the <i>first arm</i>.</li>
+				<li> <strong>Second Arm</strong>: a long cylindrical shaft connected
+				to the <i>joint</i> at the center of the <i>joint</i></li>
+				<li> <strong>Pen</strong>: another shaft of same radius as <i>second 
+				arm</i> connected to the other end of the <i>second arm</i>.</li>
+				<li> <strong>Button</strong>: a small cylinder (red) on the <i>pen</i>.
+			</li></ul>
+			<p></p>
+			<p>Create your own arm1 as a stretched cube. You can assemble arm1 by hand or use another tool outputting .obj format. Make sure you also calculate normals.
+			</p>
+            <p> <strong>Note</strong>: 
+				For the rest of the models, you can create your own or use the ones linked above.
+                <br>Use the supplied <code>void loadObject(char* file, glm::vec4 color, Vertex * &amp;out_Vertices, GLushort* &amp;out_Indices, int ObjectId)</code> function to load your objects.
+				<br>Then call <code>void createVAOs(Vertex Vertices[], unsigned short Indices[], int ObjectId)</code> for each object.
+			</p>
+		<h3> Task 4: Keyboard interaction </h3>
+		<a href="./CAP4730 (Spring 2015) Homework 2_files/movement1.png"> <img class="side" src="./CAP4730 (Spring 2015) Homework 2_files/movement1.png"> </a>
+
+		<div class="points">Points: 5+5+5+5+15</div>
+
+			<p>
+			Write the code to move the haptic device, rotate the top, rotate 
+			the arms and the pen, and twist the pen using the keyboard, as explained below:
+			</p><ul>
+				<li> <strong>Base</strong>:  Select the base using key <span class="key">
+					1</span>. The whole model should slide on the XZ plane according to the arrow keys.
+				</li>
+				<li> 
+					<strong>Top </strong>: Select the top using key <span class="key">
+					2</span>. The top, arms and pen should rotate around Y axis when using
+					the left and right arrow keys (J1).
+				</li>
+				<li>
+					<strong>First Arm</strong>: Select the first arm using key
+					<span class="key">3</span>. The arm (and the other connected arm and
+					pen) should rotate up and down when using the arrow keys (one
+					end is fixed at the center of the <i>top</i> sphere) (J2).
+				</li>
+				<li> <strong>Second Arm</strong>: Select the second arm using key
+				<span class="key">4</span>. The arm (and pen) should rotate up and 
+				down when using the arrow keys (one	end is fixed at the center of the <i>joint</i>) (J3).
+				</li>
+				<li> 
+					<strong>Pen</strong>: Select the pen using key
+					<span class="key">5</span>. The pen should rotate when the arrow keys are
+					pressed. 
+					<span class="key"><b>←</b></span>,
+					<span class="key"><b>→</b></span>,
+					<span class="key"><b>↑</b></span> and
+					<span class="key"><b>↓</b></span>
+					are longitude (J4) and latitude (J5) rotations.
+					(Note that one end is always connected to the <i>second arm</i>). 
+					<span class="key">shift+<b>←</b></span> and
+					<span class="key">shift+<b>→</b></span> 
+					should twist the pen around its axis (J6) (including buttons).
+				</li>
+			</ul>			
+				<a href="./CAP4730 (Spring 2015) Homework 2_files/hap_rot2.png"> <img class="side" src="./CAP4730 (Spring 2015) Homework 2_files/hap_rot2.png"> </a>
+				<a href="./CAP4730 (Spring 2015) Homework 2_files/hap_rot1.jpg"> <img class="side" src="./CAP4730 (Spring 2015) Homework 2_files/hap_rot1.jpg"> </a>
+			<p></p>
+            <p> <strong>Note</strong>: You should indicate the selected part by drawing it in different color. 
+            </p>
+			
+
+
+		<h3> Task 5: Light up the scene </h3>
+		<img class="side" src="./CAP4730 (Spring 2015) Homework 2_files/lightup1.png">
+        <div class="points">Points: 10</div>
+            <p>
+            Add two lights to the scene. For each light, you need to supply position, diffuse color, ambient color
+            and specular color. To keep it simple, use (1,1,1,1) for diffuse and specular, and use (.2,.2,.2,.2) for
+            ambient color of both lights. Position the lights near the camera so you would have a light coming from
+            the left and one from the right. Recommended light positions are (-1,1,1) and (0,0,1,0).<br>
+            You will also need to set the material of the objects. Set diffuse and ambient color to your desired color
+            of the object. Set specular color to one tenth of the diffuse color. <br>
+			<i>NOTE: the image to the right is just for illustration purposes and does not follow the instructions for lighting up the scene. Make sure you do follow them, however.
+            </i></p><i>
+			
+
+		<h3> BONUS </h3>
+		<div class="points">Points: 10</div>
+			<p> Implement <strong>picking</strong> for selecting the parts of the haptic device. Use your knowledge acquired in HW1A. You might also find the original <a href="http://www.opengl-tutorial.org/miscellaneous/clicking-on-objects/picking-with-an-opengl-hack/">tutorial</a> on picking helpful.
+			</p>
+
+		<h3> WHAT TO SUBMIT </h3>
+		<ul>
+			<li> A .ZIP ARCHIVE CONTAINING:
+			<ul><li> All of your <strong>source</strong> files (.cpp's, shaders, etc) as in <a href="http://www.cise.ufl.edu/~mgsarov/class/cap4730sp15/hw2/hw1b_sp15_codebase.zip">link</a></li>
+				<li> <strong>Screenshots</strong> of your running program: one per task. </li>
+			</ul></li>
+			<i>NOTE: Make sure your programs compile and run on the lab machines in E313 as the grading would be done on them.</i>
+		</ul>
+	
+
+
+</i></body></html>
